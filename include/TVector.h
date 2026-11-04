@@ -13,6 +13,8 @@ private:
     size_t capacity = 1;
     T *data = nullptr;
 
+    void reserve(size_t newCapacity);
+    void resize(size_t newN);
 public:
     TVector();
     explicit TVector(size_t n, const T& value = T());
@@ -25,6 +27,8 @@ public:
 
     iterator begin() { return data; }
     iterator end() { return data + n; }
+    const_iterator begin() const { return data; }
+    const_iterator end() const { return data + n; }
     const_iterator cbegin() const { return data; }
     const_iterator cend() const { return data + n; }
 
@@ -37,9 +41,6 @@ public:
     T& at(size_t index);
     const T& at(size_t index) const;
 
-    void reserve(size_t newCapacity);
-    void resize(size_t newN);
-
     void push_back (const T& value);
     void pop_back();
     void insert(size_t index, const T& value);
@@ -47,10 +48,22 @@ public:
     void clear();
     bool empty() const;
 
-    T& front() { return data[0]; }
-    T& back() { return data[n - 1]; }
-    const T& front() const { return data[0]; }
-    const T& back() const { return data[n - 1]; }
+    T& front() {
+        if (n==0) throw std::out_of_range("TVector is empty");
+        return data[0];
+    }
+    T& back() {
+        if (n==0) throw std::out_of_range("TVector is empty");
+        return data[n - 1];
+    }
+    const T& front() const {
+        if (n==0) throw std::out_of_range("TVector is empty");
+        return data[0];
+    }
+    const T& back() const {
+        if (n==0) throw std::out_of_range("TVector is empty");
+        return data[n - 1];
+    }
 };
 
 template <typename T>
@@ -89,13 +102,12 @@ inline TVector<T>::~TVector() {
 template <typename T>
 inline TVector<T>& TVector<T>::operator=(const TVector<T> &v) {
     if (this != &v) {
-        delete[] data;
-        n = v.n;
-        capacity = v.capacity;
-        data = new T[capacity];
-        for (size_t i = 0; i < n; i++) {
-            data[i] = v.data[i];
+        T* tmp = new T[v.capacity];
+        for (size_t i = 0; i < v.n; i++) {
+            tmp[i] = v.data[i];
         }
+        delete[] data;
+        data = tmp; n = v.n; capacity = v.capacity;
     }
     return *this;
 }
@@ -168,7 +180,7 @@ void TVector<T>::pop_back() {
 
 template <typename T>
 void TVector<T>::insert(size_t index, const T& value) {
-    if (index >= n) {
+    if (index > n) {
         throw std::out_of_range("index out of range");
     }
     if (n == capacity) {
