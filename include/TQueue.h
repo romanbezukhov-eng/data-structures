@@ -2,31 +2,49 @@
 #define DATA_STRUCTURES_TQUEUE_H
 
 #include "TVector.h"
-#include <stdexcept>
 
-const int defaultStartCapacity = 4;
+constexpr int defaultStartCapacity = 4;
+
 template <class T, class TContainer = TVector<T>>
 class TQueue {
 private:
-    TContainer data;
-    size_t head = 0;
-    size_t count = 0;
+	TContainer data;
+	size_t head = 0;
+	size_t count = 0;
 
-    void grow(size_t newN);
+	void grow(size_t newN);
 public:
-    TQueue();
-    explicit TQueue(size_t count);
+	TQueue();
+	explicit TQueue(size_t count);
 
-    void push(const T& value);
-    void pop();
-    T &front();
-    const T &front() const;
-    T &back();
-    const T &back() const;
-    bool empty() const;
-    size_t size() const;
-    void clear();
+	void push(const T& value);
+	void pop();
+	T &front();
+	const T &front() const;
+	T &back();
+	const T &back() const;
+	bool empty() const;
+	size_t size() const;
+	void clear();
 
+	friend std::ostream& operator<<(std::ostream& os, const TQueue<T, TContainer>& queue) {
+		for (size_t i = 0; i < queue.count; i++) {
+			os << queue.data[(queue.head + i) % queue.data.size()] << " ";
+		}
+		return os;
+	}
+
+	friend std::istream& operator>>(std::istream& is, TQueue& queue) {
+		std::string line;
+		if (std::getline(is, line)) {
+			std::stringstream ss(line);
+			T value;
+			while (ss >> value) {
+				queue.push(value);
+			}
+		}
+		return is;
+	}
 };
 
 template <class T, class TContainer>

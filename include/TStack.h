@@ -1,8 +1,9 @@
 #ifndef DATA_STRUCTURES_TSTACK_H
 #define DATA_STRUCTURES_TSTACK_H
 
+#include <iterator>
+
 #include "TVector.h"
-#include <stdexcept>
 
 template <typename T, typename TContainer = TVector<T>>
 class TStack {
@@ -17,6 +18,15 @@ public:
     size_t size() const;
     void clear();
 
+    friend std::ostream& operator<<(std::ostream& os, const TStack& stack) {
+        os << stack.data << '\n';
+        return os;
+    }
+
+    friend std::istream& operator>>(std::istream& is, TStack& stack) {
+        is >> stack.data;
+        return is;
+    }
 };
 
 template <typename T, typename TContainer>

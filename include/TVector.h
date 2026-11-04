@@ -1,10 +1,13 @@
 #pragma once
 
+#include <iostream>
+#include <sstream>
+#include <string>
 #include <stdexcept>
 #include <cstddef>
 
 
-const int FACTOR = 2;
+constexpr int FACTOR = 2;
 
 template <typename T>
 class TVector {
@@ -63,6 +66,34 @@ public:
     const T& back() const {
         if (n==0) throw std::out_of_range("TVector is empty");
         return data[n - 1];
+    }
+
+    friend std::ostream& operator<<(std::ostream& out, const TVector& v) {
+        for (size_t i = 0; i < v.n; i++) {
+            out << v.data[i] << " ";
+        }
+        return out;
+    }
+
+    friend std::istream& operator>>(std::istream& in, TVector& v) {
+        std::string line;
+        // начинаем вводить в консоль, отчищенную от символа переноса строки
+        if (std::getline(in >> std::ws, line)) {
+            // если строка пустая просто выходим
+            if (line.empty()) {
+                return in;
+            }
+
+            std::stringstream ss(line); // превращаем строку в поток данных
+            T value;
+
+            // считываем элементы из строчки
+            while (ss >> value) {
+                v.push_back(value);
+            }
+        }
+
+        return in;
     }
 };
 
