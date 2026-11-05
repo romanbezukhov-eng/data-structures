@@ -65,7 +65,7 @@ inline bool TStack<T, TContainer>::empty() const {
 
 template <typename T, typename TContainer>
 inline size_t TStack<T, TContainer>::size() const  {
-    return data.empty();
+    return data.size();
 }
 
 template <typename T, typename TContainer>
