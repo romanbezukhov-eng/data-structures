@@ -19,7 +19,7 @@ public:
     void clear();
 
     friend std::ostream& operator<<(std::ostream& os, const TStack& stack) {
-        os << stack.data << '\n';
+        os << stack.data;
         return os;
     }
 
@@ -64,8 +64,8 @@ inline bool TStack<T, TContainer>::empty() const {
 }
 
 template <typename T, typename TContainer>
-inline size_t TStack<T, TContainer>::size() const {
-    return data.size();
+inline size_t TStack<T, TContainer>::size() const  {
+    return data.empty();
 }
 
 template <typename T, typename TContainer>
