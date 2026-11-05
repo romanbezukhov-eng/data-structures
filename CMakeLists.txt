@@ -8,5 +8,7 @@ add_subdirectory(include)
 
 # задачи собираем, только если открыт именно этот репозиторий
 if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
+    enable_testing()
     add_subdirectory(tasks)
+    add_subdirectory(tests)
 endif()
